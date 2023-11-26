@@ -7,9 +7,12 @@ using Flux.Losses: mse, logitcrossentropy
 using JLD2
 using LinearAlgebra
 
-struct DotProductNCFModel
+export build_model, DotProductNCFModel
+
+mutable struct DotProductNCFModel
     df_train::DataFrame
     df_test::DataFrame
+    emb_size::Int64
     model::Chain
 end
 
@@ -39,16 +42,14 @@ function build_model(df_train, df_test; embeddings_size=50)
     user_n = maximum(df_train[:, "user"])
     movie_n = maximum([maximum(df_train[:, "movie"]), maximum(df_test[:, "movie"])])
     # emb_init = Flux.glorot_uniform(MersenneTwister(1))
-    # emb_init = Flux.identity_init(gain=22) 
+    # emb_init = Flux.identity_init(gain=22)
     # emb_init = Flux.glorot_normal
     emb_init = randn32
     xusers_emb = Embedding(user_n => embeddings_size; init=emb_init) # , init=Flux.identity_init(gain=22) ?
     xproducts_emb = Embedding(movie_n => embeddings_size;  init=emb_init)
     flux_model = Chain(
-        Parallel(third_dot, xusers_emb, xproducts_emb), 
+        Parallel(batched_dot_product, xusers_emb, xproducts_emb), 
         NNlib.sigmoid
         )
-    return DotProductNCFModel(df_train, df_test, flux_model)
+    return DotProductNCFModel(df_train, df_test, embeddings_size, flux_model)
 end
-
-export build_model

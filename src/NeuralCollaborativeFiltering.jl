@@ -1,12 +1,8 @@
 module NeuralCollaborativeFiltering
 
+include("models\\dot_product_ncf.jl") # needs to be before train_model.jl
 
-# Write your package code here.
 include("train_model.jl")
-export train
-
-include("models/dot_product_ncf.jl")
-export build_model
 
 include("formatting.jl")
 
