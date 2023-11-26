@@ -14,9 +14,11 @@ using NeuralCollaborativeFiltering
 
 Random.seed!(228)
 
-path = "datasets\\ml-latest-small\\user_movie_pairs_for_coll_filtr_train.csv"
-df_train = DataFrame(CSV.File(path))
+path_train = "datasets\\ml-latest-small\\user_movie_pairs_for_coll_filtr_train.csv"
+df_train = DataFrame(CSV.File(path_train))
 
-path = "datasets\\ml-latest-small\\user_movie_pairs_for_coll_filtr_test.csv"
-df_test = DataFrame(CSV.File(path))
+path_test = "datasets\\ml-latest-small\\user_movie_pairs_for_coll_filtr_test.csv"
+df_test = DataFrame(CSV.File(path_test))
+
+build_model(df_train, df_test, embeddings_size=50)
 

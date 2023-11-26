@@ -1,11 +1,13 @@
 module NeuralCollaborativeFiltering
 
-using Random
 
 # Write your package code here.
 include("train_model.jl")
+export train
+
 include("models/dot_product_ncf.jl")
-export train, a
 export build_model
+
+include("formatting.jl")
 
 end
