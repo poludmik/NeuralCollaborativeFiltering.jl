@@ -1,0 +1,7 @@
+name = "NeuralCollaborativeFiltering"
+uuid = "4926af98-24ac-477d-9236-1ef7e29a8999"
+authors = ["Mikhail Poludin"]
+version = "1.0.0-DEV"
+
+[compat]
+julia = "1.9"
