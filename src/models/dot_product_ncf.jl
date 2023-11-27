@@ -9,7 +9,7 @@ using LinearAlgebra
 
 export build_model, DotProductNCFModel
 
-mutable struct DotProductNCFModel
+mutable struct DotProductNCFModel <: NCFModel
     df_train::DataFrame
     df_test::DataFrame
     emb_size::Int64
