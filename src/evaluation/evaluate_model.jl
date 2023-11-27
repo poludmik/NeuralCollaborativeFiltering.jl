@@ -1,30 +1,7 @@
 using DataFrames
-using CSV
 using StatsBase
 using Random
-using Flux
-using Flux: params, throttle
-using Flux.Data: DataLoader
-using Flux.Losses: mse
-using JLD2
 using LinearAlgebra
-using Plots
-using Dates
-
-# Random.seed!(228)
-
-# path = "datasets\\ml-latest-small\\user_movie_pairs_for_coll_filtr_train.csv"
-# df_train = DataFrame(CSV.File(path))
-# path = "datasets\\ml-latest-small\\user_movie_pairs_for_coll_filtr_test.csv"
-# df_test = DataFrame(CSV.File(path))
-
-
-# emb_size = 50
-# filename = "weights\\model_sig_dim50_bs512_ep102_lr0.015.jld2"
-# model_state = JLD2.load(filename, "model_state");
-# # @show JLD2.load(filename, "test_loss");
-# model = build_model(df_train, df_test, emb_size)
-# Flux.loadmodel!(model, model_state)
 
 export evaluate_model_on_1_user, evaluate_model
 
