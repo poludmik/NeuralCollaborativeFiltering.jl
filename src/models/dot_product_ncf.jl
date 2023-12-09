@@ -24,10 +24,6 @@ Base.show(io::IO, m::DotProductNCFModel) = println(io, "$(BLUE)DotProductNCFMode
                                                        "#Test instances: $(nrow(m.df_test))\n    "*
                                                        "$(m.model)")
 
-function squeeeeze(x)
-    return dropdims(dropdims(x, dims=1), dims=1)
-end
-
 function batched_dot_product(x, y)
     x_expanded = reshape(x, (1, size(x)...))
     # x_T = NNlib.batched_transpose(x_expanded)
@@ -37,11 +33,13 @@ function batched_dot_product(x, y)
     y_T = NNlib.batched_transpose(y_expanded)
     # magnitude_y = sqrt.(squeeeeze(NNlib.batched_mul(y_expanded, y_T)))
     # println(size(squeeeeze(NNlib.batched_mul(x_expanded, y_T))))
+    squeeeeze(x) = dropdims(dropdims(x, dims=1), dims=1)
 
     return squeeeeze(NNlib.batched_mul(x_expanded, y_T)) # ./ (magnitude_x .* magnitude_y)
 end
 
-function build_model(df_train, df_test; embeddings_size=50)
+function build_model(x::Type{DotProductNCFModel}, df_train::DataFrame, df_test::DataFrame; embeddings_size=50)
+    println("Creating an object of type $(GREEN)$(x)$(RESET).")
     user_n = maximum(df_train[:, "user"])
     movie_n = maximum([maximum(df_train[:, "movie"]), maximum(df_test[:, "movie"])])
     # emb_init = Flux.glorot_uniform(MersenneTwister(1))
