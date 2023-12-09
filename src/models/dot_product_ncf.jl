@@ -14,7 +14,10 @@ mutable struct DotProductNCFModel <: NCFModel
     df_test::DataFrame
     emb_size::Int64
     model::Chain
+    folder_name::String
 end
+
+DotProductNCFModel(df_train::DataFrame, df_test::DataFrame, emb_size::Int64, model::Chain) = DotProductNCFModel(df_train, df_test, emb_size, model, "dot_product_ncf")
 
 Base.show(io::IO, m::DotProductNCFModel) = println(io, "$(BLUE)DotProductNCFModel$(RESET):\n    "*
                                                        "#Train instances: $(nrow(m.df_train))\n    "*

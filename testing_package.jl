@@ -21,7 +21,7 @@ df_train = DataFrame(CSV.File(path_train))
 path_test = "datasets\\ml-latest-small\\user_movie_pairs_for_coll_filtr_test.csv"
 df_test = DataFrame(CSV.File(path_test))
 
-m = build_model(df_train, df_test, embeddings_size=50)
+m = build_model(df_train, df_test, embeddings_size=60)
 weights_path, plot_path = train_model(df_train, df_test, m, n_epochs=21, lr=0.005, bs=1024)
 
 # weights_path = "weights\\dot_product_ncf\\model_dim100_bs1024_ep21_lr0.01.jld2"
