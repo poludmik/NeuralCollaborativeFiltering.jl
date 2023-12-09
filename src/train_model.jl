@@ -79,18 +79,20 @@ function train_model(df_train::DataFrame, df_test::DataFrame, m::DotProductNCFMo
             push!(x_epochs, epoch)
         end
     end
-
-    jldsave("weights\\dot_product_ncf\\model_dim$(m.emb_size)_bs$(bs)_ep$(n_epochs)_lr$(lr).jld2", 
-                                                                model_state = Flux.state(m.model), 
-                                                                test_loss = loss_all(test_data, m.model),
-                                                                trained_on_df = df_train,
-                                                                tested_on_df = df_test,
-                                                                emb_size = m.emb_size
-                                                                )
+    weights_path = "weights\\dot_product_ncf\\model_dim$(m.emb_size)_bs$(bs)_ep$(n_epochs)_lr$(lr).jld2"
+    plot_path = "plots\\dot_product_ncf\\model_dim$(m.emb_size)_bs$(bs)_ep$(n_epochs)_lr$(lr).png"
+    jldsave(weights_path, 
+            model_state = Flux.state(m.model), 
+            test_loss = loss_all(test_data, m.model),
+            trained_on_df = df_train,
+            tested_on_df = df_test,
+            emb_size = m.emb_size
+            )
 
     plot(x_epochs, [losses_train, losses_test], label=["train" "test"], xlabel="Epoch", ylabel="Loss", title="MSE losses with lr=$(lr), d=$(m.emb_size)")
-    savefig("plots\\dot_product_ncf\\model_dim$(m.emb_size)_bs$(bs)_ep$(n_epochs)_lr$(lr).png")
-
+    savefig(plot_path)
+    println("$(BLUE)Training was finished, weights and the plot were saved!$(RESET)")
+    return (weights_path, plot_path)
 end
 
 

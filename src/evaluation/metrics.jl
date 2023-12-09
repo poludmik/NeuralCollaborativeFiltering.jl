@@ -1,4 +1,3 @@
-
 function mean_reciprocal_rank(y_vec::Vector{T}, ŷ_vec::Vector{T}) where T <: Real
     score = []
     for movie_id in y_vec
@@ -9,7 +8,7 @@ function mean_reciprocal_rank(y_vec::Vector{T}, ŷ_vec::Vector{T}) where T <: R
         push!(score, rr)
     end
     # mean([movie_id in ŷ_vec ? 1.0 / findfirst(x -> x == movie_id, ŷ_vec) : 0.0 for movie_id in y_vec])
-    mean(score)
+    sum(score) / length(score)
 end
 
 function accuracy(y_vec::Vector{T}, ŷ_vec::Vector{T}) where T <: Real

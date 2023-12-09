@@ -13,6 +13,14 @@ function evaluate_model_on_1_user(m::T, user_id::Int, df_test::DataFrame; top_n_
     df_test_one_user = get_all_reviews_from_one_user(user_id, df_test)
     println("Model evaluation on user $(YELLOW)$(user_id)$(RESET):")
     println("Total number of test cases for user $(user_id): $(BLUE)$(nrow(df_test_one_user))$(RESET)")
+    if (nrow(df_test_one_user) == 0)
+        println("$(RED)Number of test cases is 0. Nothing to test for user $(user_id).$(RESET)")
+        return
+    end
+    if (top_n_mrr > nrow(df_test_one_user))
+        println("$(RED)Number of test cases for user $(user_id) is $(nrow(df_test_one_user)), but top_n_mrr=$(top_n_mrr) has to be smaller. Setting top_n_mrr to $(nrow(df_test_one_user))!$(RESET)")
+        top_n_mrr = nrow(df_test_one_user)
+    end
     x_test_1 = vec(Matrix(df_test_one_user[:, [:user]]))
     x_test_2 = vec(Matrix(df_test_one_user[:, [:movie]]))
     y_test = df_test_one_user.score
