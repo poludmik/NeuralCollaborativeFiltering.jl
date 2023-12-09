@@ -34,9 +34,9 @@ function build_model(x::Type{MLPSimilarityModel}, df_train::DataFrame, df_test::
     squeeeeze(x) = dropdims(x, dims=1)
     flux_model = Chain(
         Parallel(vcat, xusers_emb, xproducts_emb),
-        Dense(2*embeddings_size => 256),
-        # NNlib.relu,
-        Dense(256 => 1),
+        Dense(2*embeddings_size => 512),
+        NNlib.leakyrelu,
+        Dense(512 => 1),
         NNlib.sigmoid,
         squeeeeze
         )
