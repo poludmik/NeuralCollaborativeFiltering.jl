@@ -8,6 +8,8 @@ using LinearAlgebra
 
 export build_model, MLPSimilarityModel
 
+# Recommender system based on Multi Layer Perceptron: concatenate 2 Embedding layers and pass the result to the MLP.
+
 mutable struct MLPSimilarityModel <: NCFModel
     df_train::DataFrame
     df_test::DataFrame

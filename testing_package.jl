@@ -24,11 +24,15 @@ df_test = DataFrame(CSV.File(path_test))
 # model_type = DotProductModel
 # weights_path = "weights\\dot_product_ncf\\model_dim60_bs1024_ep1_lr1.0e-6.jld2"
 
-model_type = MLPSimilarityModel
-weights_path = "weights\\mlp_similarity_ncf\\model_dim60_bs1024_ep101_lr0.005.jld2"
+# model_type = MLPSimilarityModel
+# weights_path = "weights\\mlp_similarity_ncf\\model_dim60_bs1024_ep101_lr0.005.jld2"
 
-# m = build_model(model_type, df_train, df_test, embeddings_size=60)
-# weights_path, plot_path = train_model(df_train, df_test, m, n_epochs=1, lr=0.000001, bs=1024)
+model_type = GMFAndMLPModel
+# weights_path = "weights\\gmf_and_mlp_ncf\\model_dim60_bs1024_ep51_lr0.005.jld2"
+
+m = build_model(model_type, df_train, df_test, embeddings_size=60)
+println(m.model)
+weights_path, plot_path = train_model(df_train, df_test, m, n_epochs=201, lr=0.005, bs=1024)
 
 filename = weights_path
 model_state = JLD2.load(filename, "model_state")

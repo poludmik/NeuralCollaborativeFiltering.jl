@@ -7,7 +7,9 @@ using Flux.Losses: mse, logitcrossentropy
 using JLD2
 using LinearAlgebra
 
-export build_model, DotProductModel
+export build_model, DotProductModel, batched_dot_product
+
+# Recommender system based on Generalized Matrix Factorization: 2 Embedding layers with a dot product.
 
 mutable struct DotProductModel <: NCFModel
     df_train::DataFrame
@@ -33,9 +35,7 @@ function batched_dot_product(x, y)
     y_T = NNlib.batched_transpose(y_expanded)
     # magnitude_y = sqrt.(squeeeeze(NNlib.batched_mul(y_expanded, y_T)))
     # println(size(squeeeeze(NNlib.batched_mul(x_expanded, y_T))))
-    squeeeeze(x) = dropdims(dropdims(x, dims=1), dims=1)
-
-    return squeeeeze(NNlib.batched_mul(x_expanded, y_T)) # ./ (magnitude_x .* magnitude_y)
+    return NNlib.batched_mul(x_expanded, y_T) # ./ (magnitude_x .* magnitude_y)
 end
 
 function build_model(x::Type{DotProductModel}, df_train::DataFrame, df_test::DataFrame; embeddings_size=50)
@@ -48,8 +48,10 @@ function build_model(x::Type{DotProductModel}, df_train::DataFrame, df_test::Dat
     emb_init = randn32
     xusers_emb = Embedding(user_n => embeddings_size; init=emb_init) # , init=Flux.identity_init(gain=22) ?
     xproducts_emb = Embedding(movie_n => embeddings_size;  init=emb_init)
+    squeeeeze(x) = dropdims(dropdims(x, dims=1), dims=1)
     flux_model = Chain(
-        Parallel(batched_dot_product, xusers_emb, xproducts_emb), 
+        Parallel(batched_dot_product, xusers_emb, xproducts_emb),
+        squeeeeze,
         NNlib.sigmoid
         )
     return DotProductModel(df_train, df_test, embeddings_size, flux_model)

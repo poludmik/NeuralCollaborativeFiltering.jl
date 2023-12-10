@@ -11,7 +11,7 @@ using LinearAlgebra
 using Plots
 using Dates
 
-function train_model(df_train::DataFrame, df_test::DataFrame, m::Union{DotProductModel, MLPSimilarityModel};
+function train_model(df_train::DataFrame, df_test::DataFrame, m::Union{DotProductModel, MLPSimilarityModel, GMFAndMLPModel};
                     bs=512,
                     lr = 0.015,
                     n_epochs = 102
