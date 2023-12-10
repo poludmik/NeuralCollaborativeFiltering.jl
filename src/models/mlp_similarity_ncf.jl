@@ -23,9 +23,9 @@ MLPSimilarityModel(df_train::DataFrame, df_test::DataFrame, emb_size::Int64, mod
 Base.show(io::IO, m::MLPSimilarityModel) = println(io, "$(BLUE)MLPSimilarityModel$(RESET):\n    "*
                                                        "#Train instances: $(nrow(m.df_train))\n    "*
                                                        "#Test instances: $(nrow(m.df_test))\n    "*
-                                                       "$(m.model)")
+                                                       "$(m.model)\n")
 
-function build_model(x::Type{MLPSimilarityModel}, df_train::DataFrame, df_test::DataFrame; embeddings_size=50)
+function build_model(x::Type{MLPSimilarityModel}, df_train::DataFrame, df_test::DataFrame; embeddings_size=50, share_embeddings=nothing)
     println("Creating an object of type $(GREEN)$(x)$(RESET).")
     user_n = maximum(df_train[:, "user"])
     movie_n = maximum([maximum(df_train[:, "movie"]), maximum(df_test[:, "movie"])])

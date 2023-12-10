@@ -24,7 +24,7 @@ DotProductModel(df_train::DataFrame, df_test::DataFrame, emb_size::Int64, model:
 Base.show(io::IO, m::DotProductModel) = println(io, "$(BLUE)DotProductModel$(RESET):\n    "*
                                                        "#Train instances: $(nrow(m.df_train))\n    "*
                                                        "#Test instances: $(nrow(m.df_test))\n    "*
-                                                       "$(m.model)")
+                                                       "$(m.model)\n")
 
 function batched_dot_product(x, y)
     x_expanded = reshape(x, (1, size(x)...))
@@ -38,7 +38,7 @@ function batched_dot_product(x, y)
     return NNlib.batched_mul(x_expanded, y_T) # ./ (magnitude_x .* magnitude_y)
 end
 
-function build_model(x::Type{DotProductModel}, df_train::DataFrame, df_test::DataFrame; embeddings_size=50)
+function build_model(x::Type{DotProductModel}, df_train::DataFrame, df_test::DataFrame; embeddings_size=50, share_embeddings=nothing)
     println("Creating an object of type $(GREEN)$(x)$(RESET).")
     user_n = maximum(df_train[:, "user"])
     movie_n = maximum([maximum(df_train[:, "movie"]), maximum(df_test[:, "movie"])])

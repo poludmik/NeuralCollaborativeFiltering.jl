@@ -29,15 +29,16 @@ df_test = DataFrame(CSV.File(path_test))
 
 model_type = GMFAndMLPModel
 # weights_path = "weights\\gmf_and_mlp_ncf\\model_dim60_bs1024_ep51_lr0.005.jld2"
+share_embeddings = true
 
-m = build_model(model_type, df_train, df_test, embeddings_size=60)
-println(m.model)
-weights_path, plot_path = train_model(df_train, df_test, m, n_epochs=201, lr=0.005, bs=1024)
+m = build_model(model_type, df_train, df_test, embeddings_size=60, share_embeddings=share_embeddings)
+print(m)
+weights_path, plot_path = train_model(df_train, df_test, m, n_epochs=5, lr=0.001, bs=1024)
 
 filename = weights_path
 model_state = JLD2.load(filename, "model_state")
 emb_size = Int(JLD2.load(filename, "emb_size"))
-model = build_model(model_type, df_train, df_test, embeddings_size=emb_size)
+model = build_model(model_type, df_train, df_test, embeddings_size=emb_size, share_embeddings=share_embeddings)
 model.emb_size = emb_size
 Flux.loadmodel!(model.model, model_state)
 
