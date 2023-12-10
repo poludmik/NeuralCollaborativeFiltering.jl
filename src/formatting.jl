@@ -25,6 +25,9 @@ const COLORS = [
 ]
 
 function visualize_comparison(dataframe::DataFrame)
+    """
+    Assigns a color to every instance from the `y` column, and highlights the same value in the `ŷ` column (and every other column if present).
+    """
     hs = ()
     c = 0
     for value in dataframe.y

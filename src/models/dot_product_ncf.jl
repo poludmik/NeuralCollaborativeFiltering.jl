@@ -7,9 +7,9 @@ using Flux.Losses: mse, logitcrossentropy
 using JLD2
 using LinearAlgebra
 
-export build_model, DotProductNCFModel
+export build_model, DotProductModel
 
-mutable struct DotProductNCFModel <: NCFModel
+mutable struct DotProductModel <: NCFModel
     df_train::DataFrame
     df_test::DataFrame
     emb_size::Int64
@@ -17,9 +17,9 @@ mutable struct DotProductNCFModel <: NCFModel
     folder_name::String
 end
 
-DotProductNCFModel(df_train::DataFrame, df_test::DataFrame, emb_size::Int64, model::Chain) = DotProductNCFModel(df_train, df_test, emb_size, model, "dot_product_ncf")
+DotProductModel(df_train::DataFrame, df_test::DataFrame, emb_size::Int64, model::Chain) = DotProductModel(df_train, df_test, emb_size, model, "dot_product_ncf")
 
-Base.show(io::IO, m::DotProductNCFModel) = println(io, "$(BLUE)DotProductNCFModel$(RESET):\n    "*
+Base.show(io::IO, m::DotProductModel) = println(io, "$(BLUE)DotProductModel$(RESET):\n    "*
                                                        "#Train instances: $(nrow(m.df_train))\n    "*
                                                        "#Test instances: $(nrow(m.df_test))\n    "*
                                                        "$(m.model)")
@@ -38,7 +38,7 @@ function batched_dot_product(x, y)
     return squeeeeze(NNlib.batched_mul(x_expanded, y_T)) # ./ (magnitude_x .* magnitude_y)
 end
 
-function build_model(x::Type{DotProductNCFModel}, df_train::DataFrame, df_test::DataFrame; embeddings_size=50)
+function build_model(x::Type{DotProductModel}, df_train::DataFrame, df_test::DataFrame; embeddings_size=50)
     println("Creating an object of type $(GREEN)$(x)$(RESET).")
     user_n = maximum(df_train[:, "user"])
     movie_n = maximum([maximum(df_train[:, "movie"]), maximum(df_test[:, "movie"])])
@@ -52,5 +52,5 @@ function build_model(x::Type{DotProductNCFModel}, df_train::DataFrame, df_test::
         Parallel(batched_dot_product, xusers_emb, xproducts_emb), 
         NNlib.sigmoid
         )
-    return DotProductNCFModel(df_train, df_test, embeddings_size, flux_model)
+    return DotProductModel(df_train, df_test, embeddings_size, flux_model)
 end
