@@ -46,42 +46,22 @@ using JLD2
     # Smoke tests on learning and model loading for 3 types of models
     @testset "learning" begin
 
-        function create_folder_with_subfolders(main_folder::String, subfolders::Vector{String})
-            println("isdir(main_folder1) = ", isdir(main_folder))
-            if !isdir(main_folder)
-                mkdir(main_folder)
-            end
-            println("isdir(main_folder2) = ", isdir(main_folder))
-            for subfolder in subfolders
-                if !isdir(joinpath(main_folder, subfolder))
-                    mkdir(joinpath(main_folder, subfolder))
-                end
-            end
-        end
-
-        println(pwd())
-
-        main_folder = "weights\\test"
-        subfolders = ["dot_product_ncf", "mlp_similarity_ncf", "gmf_and_mlp_ncf"]
-        create_folder_with_subfolders(main_folder, subfolders)
-        main_folder = "plots\\test"
-        create_folder_with_subfolders(main_folder, subfolders)
-
-        @test isdir("weights\\test\\dot_product_ncf")
-        @test isdir("weights\\test\\mlp_similarity_ncf")
-        @test isdir("weights\\test\\gmf_and_mlp_ncf")
-        @test isdir("plots\\test\\dot_product_ncf")
-        @test isdir("plots\\test\\mlp_similarity_ncf")
-        @test isdir("plots\\test\\gmf_and_mlp_ncf")
+        @test isdir("resources")
+        @test isdir("resources\\weights\\dot_product_ncf")
+        @test isdir("resources\\weights\\mlp_similarity_ncf")
+        @test isdir("resources\\weights\\gmf_and_mlp_ncf")
+        @test isdir("resources\\plots\\dot_product_ncf")
+        @test isdir("resources\\plots\\mlp_similarity_ncf")
+        @test isdir("resources\\plots\\gmf_and_mlp_ncf")
 
         for type in [DotProductModel, MLPSimilarityModel, GMFAndMLPModel]
             Random.seed!(228)
 
-            path_train = "datasets\\ml-latest-small\\user_movie_pairs_for_coll_filtr_train.csv"
+            path_train = "resources\\datasets\\ml-latest-small\\user_movie_pairs_for_coll_filtr_train.csv"
             df_train = DataFrame(CSV.File(path_train))
             @test df_train |> typeof == DataFrame
 
-            path_test = "datasets\\ml-latest-small\\user_movie_pairs_for_coll_filtr_test.csv"
+            path_test = "resources\\datasets\\ml-latest-small\\user_movie_pairs_for_coll_filtr_test.csv"
             df_test = DataFrame(CSV.File(path_test))
             @test df_test |> typeof == DataFrame
 
@@ -92,7 +72,7 @@ using JLD2
             m = build_model(model_type, df_train, df_test, embeddings_size=emb_size, share_embeddings=share_embeddings)
             @test m |> typeof == type
 
-            weights_path, plot_path = train_model(df_train, df_test, m, n_epochs=5, lr=0.001, bs=1024, weights_folder="weights\\test\\", plots_folder="plots\\test\\")
+            weights_path, plot_path = train_model(df_train, df_test, m, n_epochs=5, lr=0.001, bs=1024, weights_folder="resources\\weights\\", plots_folder="resources\\plots\\")
             @test (weights_path |> typeof == String) && (plot_path |> typeof == String)
 
             filename = weights_path
@@ -128,18 +108,6 @@ using JLD2
             @test res_all_users.MAP <= 1.0 && res_all_users.MAP >= 0.0
             @test res_all_users.MeanACC <= 1.0 && res_all_users.MeanACC >= 0.0
         end
-
-        # if isdir("..\\weights\\test\\")
-        #     rm("..\\weights\\test\\", recursive=true)
-        # else
-        #     println("Directory does not exist: ..\\weights\\test\\")
-        # end
-
-        # if isdir("..\\plots\\test\\")
-        #     rm("..\\plots\\test\\", recursive=true)
-        # else
-        #     println("Directory does not exist: ..\\plots\\test\\")
-        # end
 
     end
 
