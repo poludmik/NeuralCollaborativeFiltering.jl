@@ -1,33 +1,23 @@
-function reciprocal_rank(y_vec::Vector{T}, ŷ_vec::Vector{T}) where T <: Real
-    movie_id = y_vec[1]
-    rr = 0.0
-    if movie_id in ŷ_vec
-        rr = 1.0 / (findfirst(x -> x == movie_id, ŷ_vec)) # Julia has 1-based indexing, no need to do +1
-    end
-    rr
-end
+
+
+reciprocal_rank(y_vec::Vector{T}, ŷ_vec::Vector{T}) where T <: Real  =  y_vec[1] in ŷ_vec ? 1.0 / findfirst(isequal(y_vec[1]), ŷ_vec) : 0.0
+
+
+accuracy(y_vec::Vector{T}, ŷ_vec::Vector{T}) where T <: Real  =  sum(y_vec[i] == ŷ_vec[i] for i in eachindex(y_vec)) / length(y_vec)
+
 
 function average_precision(y_vec::Vector{T}, ŷ_vec::Vector{T}) where T <: Real
-    score = []
     c = 0
-    d = 0
-    for (d, movie_id) in enumerate(ŷ_vec)
-        pr = 0.0
-        if movie_id in y_vec
-            c += 1
-            pr = c / d # Julia has 1-based indexing, no need to do +1
-        end
-        push!(score, pr)
-    end
-    if (length(score) == 0)
-        return 0.0
-    end
-    sum(score) / length(score)
+    scores = [(movie_id in y_vec ? (c += 1) / d : 0.0) for (d, movie_id) in enumerate(ŷ_vec)]
+    isempty(scores) ? 0.0 : sum(scores) / length(scores)
 end
+
 
 function extended_reciprocal_rank(y_vec::Vector{T}, ŷ_vec::Vector{T}) where T <: Real
     """
     The idea was taken from https://towardsdatascience.com/extended-reciprocal-rank-ranking-evaluation-metric-5929573c778a
+
+    Leaving the function in easy-to-read format, because the idea isn't well known.
     """
     movie_id = y_vec[1]
     y_is = []
@@ -48,17 +38,6 @@ function extended_reciprocal_rank(y_vec::Vector{T}, ŷ_vec::Vector{T}) where T 
         return 0.0
     end
     sum(y_is) / length(y_is)
-end
-
-function accuracy(y_vec::Vector{T}, ŷ_vec::Vector{T}) where T <: Real
-    num_same = 0
-    for i in eachindex(y_vec)
-        if y_vec[i] == ŷ_vec[i]
-            num_same += 1
-        end
-    end
-    num_same / length(y_vec)
-    # count(==(t...), zip(y_vec, ŷ_vec)) / length(y_vec)
 end
 
 export reciprocal_rank, accuracy, average_precision, extended_reciprocal_rank
