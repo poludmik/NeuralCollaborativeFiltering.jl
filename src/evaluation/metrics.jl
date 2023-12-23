@@ -19,8 +19,7 @@ function extended_reciprocal_rank(y_vec::Vector{T}, ŷ_vec::Vector{T}) where T 
 
     Leaving the function in easy-to-read format, because the idea isn't well known.
     """
-    movie_id = y_vec[1]
-    y_is = []
+    y_i_sum = 0.0
     for (mep_i, movie_id) in enumerate(y_vec)
         y_i = 0.0
         rank_i = findfirst(x -> x == movie_id, ŷ_vec)
@@ -32,12 +31,9 @@ function extended_reciprocal_rank(y_vec::Vector{T}, ŷ_vec::Vector{T}) where T 
         else
             y_i = rank_i - mep_i + 1
         end
-        push!(y_is, 1/y_i)
+        y_i_sum += 1 / y_i
     end
-    if (length(y_is) == 0)
-        return 0.0
-    end
-    sum(y_is) / length(y_is)
+    sum(y_i_sum) / length(y_vec)
 end
 
 export reciprocal_rank, accuracy, average_precision, extended_reciprocal_rank
