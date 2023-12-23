@@ -1,3 +1,18 @@
+"""
+An ugly script to extract needed training and testing data from the movielens dataset.
+Leaving code as is because it would always be different for different datasets.
+Scaling the rankings from 1 to 5 stars to <0.1, 1> by MinMaxScale.
+Splitting the train/test randomly.
+Resulting dataset used in the NeuralCollaborativeFiltering training is of form:
+
+user, movie, score
+1   ,    47,   1.0
+2   ,   256,   0.7
+...
+
+Also, I extracted the movie/genre pairs, which could potentially be used in the recommendation system that would consider those as additional features.
+"""
+
 using DataFrames
 using CSV
 using StatsBase
@@ -36,7 +51,6 @@ function fill_user_movie_matrix(user_movie_df, df_ratings)
         user_id = row.userId
         movie_id = row.movieId
         rating = row.rating
-        # @show user_movie_df[movie_id_to_col_idx(movie_id, df_movies), user_id]
         user_movie_df[user_id, movie_id_to_col_idx(movie_id, df_movies)] = rating
     end
     user_movie_df
@@ -44,7 +58,7 @@ end
 
 user_movie_df = fill_user_movie_matrix(user_movie_df, df_ratings)
 
-function min_max_scale(df, min_val, max_val)  # TODO: Maybe doesn't work like it should (rows/cols)
+function min_max_scale(df, min_val, max_val)
     # X_std = (X - X.min(axis=0)) / (X.max(axis=0) - X.min(axis=0))
     # X_scaled = X_std * (max - min) + min
     for (c, col) in enumerate(eachcol(df))
@@ -58,8 +72,9 @@ function min_max_scale(df, min_val, max_val)  # TODO: Maybe doesn't work like it
     df
 end
 
+# Scale values to <0.1, 1.0> with MinMaxScale
 copy_for_zeros = copy(user_movie_df)
-min_value, max_value = 0.1, 1.0  # TODO: or (0, 1) better? or leave zeros at 0?
+min_value, max_value = 0.1, 1.0
 user_movie_df = min_max_scale(user_movie_df, min_value, max_value)
 
 user_movie_pairs = DataFrame()
@@ -68,15 +83,11 @@ for (r, row) in enumerate(eachrow(copy_for_zeros))
         if copy_for_zeros[r, c] == 0.0 # In paper, they leave it to NaN
             user_movie_df[r, c] = 0.0
         else
-            # println("user ", r, " movie ", c, " rating ", copy_for_zeros[r, c])
             new_row = (user = r, movie = c, score = user_movie_df[r, c]) # Isn't 
             push!(user_movie_pairs, new_row)
         end
     end
 end
-
-# println(user_movie_df[1:10,1:10])
-# @show count(x -> x > 1.0 || x < 0.5, Matrix(user_movie_df)) # TODO: unittest: should be 0 (if only > 1.0)
 
 function genre_to_idx(movie_df)
     curr_idx = 1
@@ -112,8 +123,6 @@ movie_genre_df = fill_movie_genre_matrix(movie_genre_df, df_movies, genre2idx)
 random_test_idxs = sort(sample(1:max_movie_idx, 742, replace = false)) # 728 test instances of unseen movies
 train_idxs = (1:max_movie_idx)[setdiff(1:max_movie_idx, random_test_idxs)] # remaining train instances
 
-# has_common_value = any(x -> x in train_idxs, random_test_idxs) # TODO: unittest, should be false
-
 movie_genre_df_test = view(movie_genre_df, random_test_idxs, :)
 user_movie_df_test = view(user_movie_df, :, random_test_idxs)
 
@@ -125,7 +134,6 @@ CSV.write(joinpath(output_path, "movie_genre_df_test.csv"), movie_genre_df_test)
 CSV.write(joinpath(output_path, "user_movie_df_test.csv"), user_movie_df_test)
 CSV.write(joinpath(output_path, "movie_genre_df_train.csv"), movie_genre_df_train)
 CSV.write(joinpath(output_path, "user_movie_df_train.csv"), user_movie_df_train)
-
 
 
 function collect_user_movie_pairs(df)

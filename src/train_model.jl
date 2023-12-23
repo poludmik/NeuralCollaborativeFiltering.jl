@@ -11,6 +11,26 @@ using LinearAlgebra
 using Plots
 using Dates
 
+
+"""
+    train_model(df_train::DataFrame, df_test::DataFrame, m::Union{DotProductModel, MLPSimilarityModel, GMFAndMLPModel})
+
+Uses Flux.jl to optimize the weights of the m.model Chain on the df_train data.
+
+# Arguments
+- `df_train::DataFrame`: Training instances: (`user`, `movie`, `score`).
+- `df_test::DataFrame`: Testing instances: (`user`, `movie`, `score`).
+- `m`: A model object to be trained.
+
+# Returns
+- `(weights_path, plot_path)`: Two strings with saved results. 
+
+# Example
+```jldoctest
+julia> m = build_model(model_type, df_train, df_test, embeddings_size=60, share_embeddings=share_embeddings);
+julia> weights_path, plot_path = train_model(df_train, df_test, m, n_epochs=5, lr=0.001, bs=1024);
+```
+"""
 function train_model(df_train::DataFrame, df_test::DataFrame, m::Union{DotProductModel, MLPSimilarityModel, GMFAndMLPModel};
                     bs=512,
                     lr = 0.015,

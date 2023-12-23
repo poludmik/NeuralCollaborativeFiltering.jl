@@ -4,10 +4,9 @@ const YELLOW = "\x1b[33m"
 const BLUE = "\x1b[34m"
 const RESET = "\x1b[0m"
 
-export RED, GREEN, YELLOW, BLUE, RESET, visualize_comparison
-
 using PrettyTables
 
+# Easy to distinguish colors that will be used by PrettyTables.jl.
 const COLORS = [
     :red           ,
     :green         ,
@@ -24,10 +23,18 @@ const COLORS = [
     :black         ,
 ]
 
+"""
+    visualize_comparison(dataframe::DataFrame)
+
+Assigns a color to every instance from the `y` column, and highlights the same value in the `ŷ` column (and every other column if present).
+Used for easier comparison of the ground truth rankings and the predicted rankings side by side.
+
+# Example
+```jldoctest
+julia> visualize_comparison(df);
+```
+"""
 function visualize_comparison(dataframe::DataFrame)
-    """
-    Assigns a color to every instance from the `y` column, and highlights the same value in the `ŷ` column (and every other column if present).
-    """
     hs = ()
     c = 0
     for value in dataframe.y
@@ -36,3 +43,6 @@ function visualize_comparison(dataframe::DataFrame)
     end
     pretty_table(dataframe, highlighters=(hs))
 end
+
+
+export RED, GREEN, YELLOW, BLUE, RESET, visualize_comparison
