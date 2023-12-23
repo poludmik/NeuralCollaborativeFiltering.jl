@@ -47,15 +47,19 @@ using JLD2
     @testset "learning" begin
 
         function create_folder_with_subfolders(main_folder::String, subfolders::Vector{String})
+            println("isdir(main_folder1) = ", isdir(main_folder))
             if !isdir(main_folder)
                 mkdir(main_folder)
             end
+            println("isdir(main_folder2) = ", isdir(main_folder))
             for subfolder in subfolders
                 if !isdir(joinpath(main_folder, subfolder))
                     mkdir(joinpath(main_folder, subfolder))
                 end
             end
         end
+
+        println(pwd())
 
         main_folder = "weights\\test"
         subfolders = ["dot_product_ncf", "mlp_similarity_ncf", "gmf_and_mlp_ncf"]
