@@ -49,6 +49,7 @@ function evaluate_model_on_1_user(m::T, user_id::Int, df_test::DataFrame; top_n_
     ap = average_precision(top_5_y_movie_ids, top_5_ŷ_movie_ids)
     ext_rr = extended_reciprocal_rank(top_5_y_movie_ids, top_5_ŷ_movie_ids)
     println("ExtRR: $(BLUE)$(round(ext_rr, digits=4))$(RESET), RR: $(BLUE)$(round(rr, digits=4))$(RESET), AP: $(BLUE)$(round(ap, digits=4))$(RESET), ACC: $(BLUE)$(round(acc, digits=4))$(RESET)")
+    return (ExtRR=round(ext_rr, digits=4), RR=round(rr, digits=4), AP=round(ap, digits=4), ACC=round(acc, digits=4))
 end
 
 function evaluate_model(test_df, m::T; minimal_y_length=10, top_n_map=5) where T <: NCFModel # calculate metrics for all test instances (every user: mrr, acc)
@@ -85,7 +86,7 @@ function evaluate_model(test_df, m::T; minimal_y_length=10, top_n_map=5) where T
         push!(aps, average_precision(top_5_y_movie_ids, top_5_ŷ_movie_ids))
     end
     println("\n$(YELLOW)Whole test set:$(RESET)")
-    println("MeanExtRR: $(BLUE)$(round(mean(ext_rrs), digits=4))$(RESET), MRR: $(BLUE)$(round(mean(rrs), digits=4))$(RESET), MAP: $(BLUE)$(round(mean(aps), digits=4))$(RESET), MeanACC: $(BLUE)$(round(mean(accs), digits=4))$(RESET)")
-    # return (MeanExtRR=round(mean(ext_rrs), digits=4), MRR=round(mean(rrs), digits=4), MAP=round(mean(aps), digits=4), MeanACC=round(mean(accs), digits=4))
+    println("MeanExtRR: $(BLUE)$(round(mean(ext_rrs), digits=4))$(RESET), MRR: $(BLUE)$(round(mean(rrs), digits=4))$(RESET), MAP: $(BLUE)$(round(mean(aps), digits=4))$(RESET), MeanACC: $(BLUE)$(round(mean(accs), digits=4))$(RESET)\n")
+    return (MeanExtRR=round(mean(ext_rrs), digits=4), MRR=round(mean(rrs), digits=4), MAP=round(mean(aps), digits=4), MeanACC=round(mean(accs), digits=4))
 end
 

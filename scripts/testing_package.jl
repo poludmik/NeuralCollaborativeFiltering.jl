@@ -36,5 +36,5 @@ model = build_model(model_type, df_train, df_test, embeddings_size=emb_size, sha
 model.emb_size = emb_size
 Flux.loadmodel!(model.model, model_state)
 
-evaluate_model_on_1_user(model, 1, df_test, top_n_mrr=5)
-evaluate_model(df_test, model)
+evaluate_model_on_1_user(model, 1, df_test, top_n_mrr=5);
+evaluate_model(df_test, model);
