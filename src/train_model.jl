@@ -14,7 +14,9 @@ using Dates
 function train_model(df_train::DataFrame, df_test::DataFrame, m::Union{DotProductModel, MLPSimilarityModel, GMFAndMLPModel};
                     bs=512,
                     lr = 0.015,
-                    n_epochs = 102
+                    n_epochs = 102,
+                    weights_folder = "..\\weights\\",
+                    plots_folder = "..\\plots\\"
                     )
 
     x_train_1 = vec(Matrix(df_train[:, [:user]]))
@@ -79,8 +81,8 @@ function train_model(df_train::DataFrame, df_test::DataFrame, m::Union{DotProduc
             push!(x_epochs, epoch)
         end
     end
-    weights_path = "weights\\$(m.folder_name)\\model_dim$(m.emb_size)_bs$(bs)_ep$(n_epochs)_lr$(lr).jld2"
-    plot_path = "plots\\$(m.folder_name)\\model_dim$(m.emb_size)_bs$(bs)_ep$(n_epochs)_lr$(lr).png"
+    weights_path = weights_folder * "$(m.folder_name)\\model_dim$(m.emb_size)_bs$(bs)_ep$(n_epochs)_lr$(lr).jld2"
+    plot_path = plots_folder * "$(m.folder_name)\\model_dim$(m.emb_size)_bs$(bs)_ep$(n_epochs)_lr$(lr).png"
     jldsave(weights_path, 
             model_state = Flux.state(m.model), 
             test_loss = loss_all(test_data, m.model),
