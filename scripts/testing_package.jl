@@ -11,22 +11,22 @@ Random.seed!(228)
 
 
 ######### Load dataset: ###########
-path_train = "..\\datasets\\ml-latest-small\\user_movie_pairs_for_coll_filtr_train.csv"
+path_train = "../datasets/ml-latest-small/user_movie_pairs_for_coll_filtr_train.csv"
 df_train = DataFrame(CSV.File(path_train))
-path_test = "..\\datasets\\ml-latest-small\\user_movie_pairs_for_coll_filtr_test.csv"
+path_test = "../datasets/ml-latest-small/user_movie_pairs_for_coll_filtr_test.csv"
 df_test = DataFrame(CSV.File(path_test))
 
 
 
 ######## Select the model: ########
 # model_type = DotProductModel
-# weights_path = "..\\weights\\dot_product_ncf\\model_dim60_bs1024_ep5_lr0.001.jld2"
+# weights_path = "../weights/dot_product_ncf/model_dim60_bs1024_ep5_lr0.001.jld2"
 
 # model_type = MLPSimilarityModel
-# weights_path = "..\\weights\\mlp_similarity_ncf\\model_dim60_bs1024_ep101_lr0.005.jld2"
+# weights_path = "../weights/mlp_similarity_ncf/model_dim60_bs1024_ep101_lr0.005.jld2"
 
 model_type = GMFAndMLPModel
-weights_path = "..\\weights\\gmf_and_mlp_ncf\\model_dim60_bs1024_ep5_lr0.001.jld2"
+weights_path = "../weights/gmf_and_mlp_ncf/model_dim60_bs1024_ep5_lr0.001.jld2"
 share_embeddings = true
 
 

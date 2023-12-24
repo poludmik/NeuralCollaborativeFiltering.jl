@@ -1,9 +1,9 @@
 """
-An ugly script to extract needed training and testing data from the movielens dataset.
-Leaving code as is because it would always be different for different datasets.
+An ugly script to extract needed training and testing data from the `movielens` dataset.
+Leaving code as it is because it would always be different for different datasets.
 Scaling the rankings from 1 to 5 stars to <0.1, 1> by MinMaxScale.
 Splitting the train/test randomly.
-Resulting dataset used in the NeuralCollaborativeFiltering training is of form:
+Resulting dataset that is used in the NeuralCollaborativeFiltering training is of form:
 
 user, movie, score
 1   ,    47,   1.0
@@ -58,6 +58,12 @@ end
 
 user_movie_df = fill_user_movie_matrix(user_movie_df, df_ratings)
 
+"""
+    min_max_scale(df, min_val, max_val)
+
+X_std = (X - X.min(axis=0)) / (X.max(axis=0) - X.min(axis=0))
+X_scaled = X_std * (max - min) + min
+"""
 function min_max_scale(df, min_val, max_val)
     # X_std = (X - X.min(axis=0)) / (X.max(axis=0) - X.min(axis=0))
     # X_scaled = X_std * (max - min) + min

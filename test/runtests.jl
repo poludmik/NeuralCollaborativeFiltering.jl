@@ -51,17 +51,18 @@ using JLD2
 
         @test isdir("resources")
         @test isdir(joinpath(@__DIR__, "resources"))
-        @test isdir(joinpath(@__DIR__, "resources\\weights"))
-        @test isdir(joinpath(@__DIR__, "resources\\weights\\dot_product_ncf"))
+        @test isdir(joinpath(@__DIR__, "resources/weights"))
+        @test isdir(joinpath(@__DIR__, "resources/weights/dot_product_ncf"))
         # @test isdir("resources\\weights\\mlp_similarity_ncf")
         # @test isdir("resources\\weights\\gmf_and_mlp_ncf")
         # @test isdir("resources\\plots\\dot_product_ncf")
         # @test isdir("resources\\plots\\mlp_similarity_ncf")
         # @test isdir("resources\\plots\\gmf_and_mlp_ncf")
 
-        path_test = joinpath(@__DIR__, "resources\\datasets\\ml-latest-small\\user_movie_pairs_for_coll_filtr_test.csv")
+        path_test = joinpath(@__DIR__, "resources/datasets/ml-latest-small/user_movie_pairs_for_coll_filtr_test.csv")
         df_test = DataFrame(CSV.File(path_test))
         println(df_test |> typeof)
+        @test df_test |> typeof == DataFrame
         
 
         # for type in [DotProductModel, MLPSimilarityModel, GMFAndMLPModel]
