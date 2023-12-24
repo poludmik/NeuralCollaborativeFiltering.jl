@@ -67,6 +67,11 @@ function batched_dot_product(x, y)
     x_expanded = reshape(x, (1, size(x)...))
     y_expanded = reshape(y, (1, size(y)...))
     y_T = NNlib.batched_transpose(y_expanded)
+    println("size(x_expanded): ", size(x_expanded))
+    println("typeof(x_expanded): ", typeof(x_expanded))
+    println("size(y_T): ", size(y_T))
+    println("typeof(y_T): ", typeof(y_T))
+    println("")
     return NNlib.batched_mul(x_expanded, y_T)
 end
 
@@ -76,7 +81,7 @@ end
 
 Constructs and returns an instance of DotProductModel using training and testing data sizes along with specified model parameters.
 
-# Arguments
+# Arguments 
 - `x::Type{DotProductModel}`: The type of the model to be created. Multiple dispatch allows to define `build_model` for every model type differently.
 - `df_train::DataFrame`: The training data frame. Used to get the size of the embedding layers based on the numbers of movies and users.
 - `df_test::DataFrame`: The testing data frame. Same as `df_train`.
