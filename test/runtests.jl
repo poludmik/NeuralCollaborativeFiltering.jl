@@ -53,72 +53,69 @@ using JLD2
         @test isdir(joinpath(@__DIR__, "resources"))
         @test isdir(joinpath(@__DIR__, "resources/weights"))
         @test isdir(joinpath(@__DIR__, "resources/weights/dot_product_ncf"))
-        # @test isdir("resources\\weights\\mlp_similarity_ncf")
-        # @test isdir("resources\\weights\\gmf_and_mlp_ncf")
-        # @test isdir("resources\\plots\\dot_product_ncf")
-        # @test isdir("resources\\plots\\mlp_similarity_ncf")
-        # @test isdir("resources\\plots\\gmf_and_mlp_ncf")
+        @test isdir(joinpath(@__DIR__, "resources/weights/mlp_similarity_ncf"))
+        @test isdir(joinpath(@__DIR__, "resources/weights/gmf_and_mlp_ncf"))
+        @test isdir(joinpath(@__DIR__, "resources/plots"))
+        @test isdir(joinpath(@__DIR__, "resources/plots/dot_product_ncf"))
+        @test isdir(joinpath(@__DIR__, "resources/plots/mlp_similarity_ncf"))
+        @test isdir(joinpath(@__DIR__, "resources/plots/gmf_and_mlp_ncf"))
 
-        path_test = joinpath(@__DIR__, "resources/datasets/ml-latest-small/user_movie_pairs_for_coll_filtr_test.csv")
-        df_test = DataFrame(CSV.File(path_test))
-        println(df_test |> typeof)
-        @test df_test |> typeof == DataFrame
-        
+        for type in [DotProductModel, MLPSimilarityModel, GMFAndMLPModel]
+            Random.seed!(228)
 
-        # for type in [DotProductModel, MLPSimilarityModel, GMFAndMLPModel]
-        #     Random.seed!(228)
+            path_train = joinpath(@__DIR__, "resources/datasets/ml-latest-small/user_movie_pairs_for_coll_filtr_train.csv")
+            df_train = DataFrame(CSV.File(path_train))
+            @test df_train |> typeof == DataFrame
 
-        #     path_train = "resources\\datasets\\ml-latest-small\\user_movie_pairs_for_coll_filtr_train.csv"
-        #     df_train = DataFrame(CSV.File(path_train))
-        #     @test df_train |> typeof == DataFrame
+            path_test = joinpath(@__DIR__, "resources/datasets/ml-latest-small/user_movie_pairs_for_coll_filtr_test.csv")
+            df_test = DataFrame(CSV.File(path_test))
+            @test df_test |> typeof == DataFrame
 
-        #     path_test = "resources\\datasets\\ml-latest-small\\user_movie_pairs_for_coll_filtr_test.csv"
-        #     df_test = DataFrame(CSV.File(path_test))
-        #     @test df_test |> typeof == DataFrame
+            model_type = type
+            share_embeddings = true
+            emb_size = 60
 
-        #     model_type = type
-        #     share_embeddings = true
-        #     emb_size = 60
+            m = build_model(model_type, df_train, df_test, embeddings_size=emb_size, share_embeddings=share_embeddings)
+            @test m |> typeof == type
 
-        #     m = build_model(model_type, df_train, df_test, embeddings_size=emb_size, share_embeddings=share_embeddings)
-        #     @test m |> typeof == type
+            weights_path, plot_path = train_model(df_train, df_test, m, n_epochs=5, lr=0.001, bs=1024, 
+                                                                    weights_folder=joinpath(@__DIR__, "resources/weights/"), 
+                                                                    plots_folder=joinpath(@__DIR__, "resources/plots/"))
+            @test (weights_path |> typeof == String) && (plot_path |> typeof == String)
 
-        #     weights_path, plot_path = train_model(df_train, df_test, m, n_epochs=5, lr=0.001, bs=1024, weights_folder="resources\\weights\\", plots_folder="resources\\plots\\")
-        #     @test (weights_path |> typeof == String) && (plot_path |> typeof == String)
+            filename = weights_path
+            model_state = JLD2.load(filename, "model_state")
+            @test Int(JLD2.load(filename, "emb_size")) == emb_size
+            emb_size = Int(JLD2.load(filename, "emb_size"))
 
-        #     filename = weights_path
-        #     model_state = JLD2.load(filename, "model_state")
-        #     @test Int(JLD2.load(filename, "emb_size")) == emb_size
-        #     emb_size = Int(JLD2.load(filename, "emb_size"))
+            model = build_model(model_type, df_train, df_test, embeddings_size=emb_size, share_embeddings=share_embeddings)
+            @test m |> typeof == type
 
-        #     model = build_model(model_type, df_train, df_test, embeddings_size=emb_size, share_embeddings=share_embeddings)
-        #     @test m |> typeof == type
+            model.emb_size = emb_size
+            Flux.loadmodel!(model.model, model_state)
 
-        #     model.emb_size = emb_size
-        #     Flux.loadmodel!(model.model, model_state)
+            res_one_user = evaluate_model_on_1_user(model, 1, df_test, top_n_mrr=5);
 
-        #     res_one_user = evaluate_model_on_1_user(model, 1, df_test, top_n_mrr=5);
+            @test :ExtRR in fieldnames(typeof(res_one_user))
+            @test :RR in fieldnames(typeof(res_one_user))
+            @test :AP in fieldnames(typeof(res_one_user))
+            @test :ACC in fieldnames(typeof(res_one_user))
+            @test res_one_user.ExtRR <= 1.0 && res_one_user.ExtRR >= 0.0
+            @test res_one_user.RR <= 1.0 && res_one_user.RR >= 0.0
+            @test res_one_user.AP <= 1.0 && res_one_user.AP >= 0.0
+            @test res_one_user.ACC <= 1.0 && res_one_user.ACC >= 0.0
 
-        #     @test :ExtRR in fieldnames(typeof(res_one_user))
-        #     @test :RR in fieldnames(typeof(res_one_user))
-        #     @test :AP in fieldnames(typeof(res_one_user))
-        #     @test :ACC in fieldnames(typeof(res_one_user))
-        #     @test res_one_user.ExtRR <= 1.0 && res_one_user.ExtRR >= 0.0
-        #     @test res_one_user.RR <= 1.0 && res_one_user.RR >= 0.0
-        #     @test res_one_user.AP <= 1.0 && res_one_user.AP >= 0.0
-        #     @test res_one_user.ACC <= 1.0 && res_one_user.ACC >= 0.0
+            res_all_users = evaluate_model(df_test, model);
 
-        #     res_all_users = evaluate_model(df_test, model);
-
-        #     @test :MeanExtRR in fieldnames(typeof(res_all_users))
-        #     @test :MRR in fieldnames(typeof(res_all_users))
-        #     @test :MAP in fieldnames(typeof(res_all_users))
-        #     @test :MeanACC in fieldnames(typeof(res_all_users))
-        #     @test res_all_users.MeanExtRR <= 1.0 && res_all_users.MeanExtRR >= 0.0
-        #     @test res_all_users.MRR <= 1.0 && res_all_users.MRR >= 0.0
-        #     @test res_all_users.MAP <= 1.0 && res_all_users.MAP >= 0.0
-        #     @test res_all_users.MeanACC <= 1.0 && res_all_users.MeanACC >= 0.0
-        # end
+            @test :MeanExtRR in fieldnames(typeof(res_all_users))
+            @test :MRR in fieldnames(typeof(res_all_users))
+            @test :MAP in fieldnames(typeof(res_all_users))
+            @test :MeanACC in fieldnames(typeof(res_all_users))
+            @test res_all_users.MeanExtRR <= 1.0 && res_all_users.MeanExtRR >= 0.0
+            @test res_all_users.MRR <= 1.0 && res_all_users.MRR >= 0.0
+            @test res_all_users.MAP <= 1.0 && res_all_users.MAP >= 0.0
+            @test res_all_users.MeanACC <= 1.0 && res_all_users.MeanACC >= 0.0
+        end
 
     end
 
