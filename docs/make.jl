@@ -2,7 +2,7 @@ using Documenter, NeuralCollaborativeFiltering
 
 makedocs(sitename="NeuralCollaborativeFiltering.jl",
     pages = [
-        "Project" => "index.md",
+        "Home" => "index.md",
         "Modules" => [
             "models.md",
             "eval.md",
