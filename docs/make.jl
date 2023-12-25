@@ -12,5 +12,7 @@ makedocs(sitename="NeuralCollaborativeFiltering.jl",
 )
 
 deploydocs(
-    repo = "github.com/poludmik/NeuralCollaborativeFiltering.git",
+    repo = "github.com/poludmik/NeuralCollaborativeFiltering.jl.git",
+    branch = "gh-pages",
+    target = "build"
 )
