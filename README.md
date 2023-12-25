@@ -1,6 +1,6 @@
-# NeuralCollaborativeFiltering.jl [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/JuliaTeachingCTU/ImageInspector.jl/blob/master/LICENSE) [![Build Status](https://github.com/poludmik/NeuralCollaborativeFiltering.jl/actions/workflows/CI.yml/badge.svg?branch=master)](https://github.com/poludmik/NeuralCollaborativeFiltering.jl/actions/workflows/CI.yml?query=branch%3Amaster)
+# NeuralCollaborativeFiltering.jl [![](https://img.shields.io/badge/docs-latest-blue.svg)](https://poludmik.github.io/NeuralCollaborativeFiltering.jl/dev/) [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/JuliaTeachingCTU/ImageInspector.jl/blob/master/LICENSE) [![Build Status](https://github.com/poludmik/NeuralCollaborativeFiltering.jl/actions/workflows/CI.yml/badge.svg?branch=master)](https://github.com/poludmik/NeuralCollaborativeFiltering.jl/actions/workflows/CI.yml?query=branch%3Amaster)
 
-<img src="README/dot_mlp_and_both.png">
+<img src="docs/src/assets/dot_mlp_and_both.png">
 
 A Julia implementation of three different recommender systems based on the concept of Neural Collaborative Filtering. It utilizes the MovieLens dataset, consisting of users, their movie ratings, movie genres, etc. The goal is to predict how much a certain user will like a particular movie, i.e., **(user, movie) -> rating** prediction.
 
@@ -60,7 +60,7 @@ Other than staring at the decreasing test loss during training it is also good t
 > ***For example** let's take the case from the image below*: for user number $1$, we have the ground truth order of recommendations with movie ids: $y = [131, 2766, 47, 1517, ...]$. The movie $131$ is the most relevant one. 
 The recommender system produces the following order of movie relevances: $\hat y = [131, 2766, 47, 1688, ...]$. We can see that the top 3 reccomendations were predicted right where they should be, which is good. The recommended movie number $1688$ isn't even relevant according to $y$; this is bad. Then, the $1517, 2227$ and $2146$ are all shifted down by one rank; this is not that bad, but not good. Describing it with "it's good" or "it's bad" terms is ok, but we want a numerical evaluation.
 
-<img src="README/eval.png">
+<img src="docs/src/assets/eval.png">
 
 There are 4 different metrics implemented in [metrics.jl](https://github.com/poludmik/NeuralCollaborativeFiltering.jl/blob/master/src/evaluation/metrics.jl). More specifically:
 

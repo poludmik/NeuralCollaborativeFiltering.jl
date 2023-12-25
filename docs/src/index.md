@@ -1,4 +1,5 @@
-# NeuralCollaborativeFiltering.jl  [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/JuliaTeachingCTU/ImageInspector.jl/blob/master/LICENSE) [![Build Status](https://github.com/poludmik/NeuralCollaborativeFiltering.jl/actions/workflows/CI.yml/badge.svg?branch=master)](https://github.com/poludmik/NeuralCollaborativeFiltering.jl/actions/workflows/CI.yml?query=branch%3Amaster)
+# NeuralCollaborativeFiltering.jl [![](https://img.shields.io/badge/docs-latest-blue.svg)](https://poludmik.github.io/NeuralCollaborativeFiltering.jl/dev/) [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/JuliaTeachingCTU/ImageInspector.jl/blob/master/LICENSE) [![Build Status](https://github.com/poludmik/NeuralCollaborativeFiltering.jl/actions/workflows/CI.yml/badge.svg?branch=master)](https://github.com/poludmik/NeuralCollaborativeFiltering.jl/actions/workflows/CI.yml?query=branch%3Amaster)
+
 
 
 ![image info](assets/dot_mlp_and_both.png)
