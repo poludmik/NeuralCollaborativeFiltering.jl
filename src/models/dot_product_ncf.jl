@@ -20,7 +20,7 @@ Sizes of both embedding layers depend on a number of movies and on a number of u
 - `df_test::DataFrame`: Testing set to be learnt on.
 - `emb_size::Int64`: Size of a single embedding vector for one user or for one movie.
 - `model::Chain`: Flux.jl Chain object representing the NN.
-- `folder_name::String`: Assigned to 'dot_product_ncf' in the constructor automatically.
+- `folder_name::String`: Assigned to `dot_product_ncf` in the constructor automatically.
 
 # References
 - Source: [Figure 1 (left) from `Neural Collaborative Filtering vs. Matrix Factorization Revisited`](https://arxiv.org/pdf/2005.09683.pdf)
