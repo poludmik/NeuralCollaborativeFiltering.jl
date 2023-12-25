@@ -1,0 +1,3 @@
+[deps]
+Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+NeuralCollaborativeFiltering = "4926af98-24ac-477d-9236-1ef7e29a8999"

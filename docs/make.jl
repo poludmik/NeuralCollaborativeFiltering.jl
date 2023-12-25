@@ -1,6 +1,4 @@
 using Documenter, NeuralCollaborativeFiltering
-using DataFrames
-
 
 makedocs(sitename="NeuralCollaborativeFiltering.jl",
     pages = [
