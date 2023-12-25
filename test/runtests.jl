@@ -43,7 +43,6 @@ using JLD2
     end
     ############################################################
 
-
     # Smoke tests on learning and loading the model for 3 different types of models
     @testset "learning" begin
 
@@ -59,6 +58,9 @@ using JLD2
         @test isdir(joinpath(@__DIR__, "resources/plots/dot_product_ncf"))
         @test isdir(joinpath(@__DIR__, "resources/plots/mlp_similarity_ncf"))
         @test isdir(joinpath(@__DIR__, "resources/plots/gmf_and_mlp_ncf"))
+        @test isdir(joinpath(@__DIR__, "resources/datasets/ml-latest-small"))
+
+        prev_folder_name = "" # Will test that multiple dispatch on build_model works correctly
 
         for type in [DotProductModel, MLPSimilarityModel, GMFAndMLPModel]
             Random.seed!(228)
@@ -90,6 +92,9 @@ using JLD2
 
             model = build_model(model_type, df_train, df_test, embeddings_size=emb_size, share_embeddings=share_embeddings)
             @test m |> typeof == type
+
+            @test m.folder_name != prev_folder_name
+            prev_folder_name = m.folder_name
 
             model.emb_size = emb_size
             Flux.loadmodel!(model.model, model_state)

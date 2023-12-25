@@ -1,4 +1,4 @@
-# NeuralCollaborativeFiltering.jl [![Build Status](https://github.com/poludmik/NeuralCollaborativeFiltering.jl/actions/workflows/CI.yml/badge.svg?branch=master)](https://github.com/poludmik/NeuralCollaborativeFiltering.jl/actions/workflows/CI.yml?query=branch%3Amaster)
+# NeuralCollaborativeFiltering.jl [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/JuliaTeachingCTU/ImageInspector.jl/blob/master/LICENSE) [![Build Status](https://github.com/poludmik/NeuralCollaborativeFiltering.jl/actions/workflows/CI.yml/badge.svg?branch=master)](https://github.com/poludmik/NeuralCollaborativeFiltering.jl/actions/workflows/CI.yml?query=branch%3Amaster)
 
 <img src="README/dot_mlp_and_both.png">
 
@@ -36,10 +36,22 @@ I downloaded the MovieLens dataset from [here](https://grouplens.org/datasets/mo
 
 However, this project can easily be extended contain other types of recommender systems, that, e.g. would also consider the features of movies.
 That's why I've also extracted 20 movie genre features for each of them and divided data to [trainset](https://github.com/poludmik/NeuralCollaborativeFiltering.jl/blob/master/datasets/ml-latest-small/movie_genre_df_train.csv) and [testset](https://github.com/poludmik/NeuralCollaborativeFiltering.jl/blob/master/datasets/ml-latest-small/movie_genre_df_test.csv) according to the previous 'user' x 'movie' x 'score' split. Features are boolean encoded, each column represents a specified genre, i.e.:
-1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20
--|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-
-0|0|0|0|0|0|1|0|0|0|0|0|1|0|0|0|0|0|0|0
-0|0|0|0|0|1|1|0|0|0|0|0|0|0|0|0|1|0|0|0
+
+<table style="font-size: small;">
+  <tr>
+    <td><strong>1</strong></td><td><strong>2</strong></td><td><strong>3</strong></td>
+    <td><strong>4</strong></td><td><strong>5</strong></td><td><strong>6</strong></td><td><strong>...</strong></td><td><strong>16</strong></td>
+    <td><strong>17</strong></td><td><strong>18</strong></td><td><strong>19</strong></td><td><strong>20</strong></td>
+  </tr>
+  <tr>
+    <td>0</td><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td><td>...</td><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td>
+  </tr>
+  <tr>
+    <td>0</td><td>0</td><td>0</td><td>1</td><td>1</td><td>0</td><td>...</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td>
+  </tr>
+</table>
+
+
 
 
 # Model evaluation
