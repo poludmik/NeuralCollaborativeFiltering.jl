@@ -67,12 +67,14 @@ function batched_dot_product(x, y)
     x_expanded = reshape(x, (1, size(x)...))
     y_expanded = reshape(y, (1, size(y)...))
     y_T = NNlib.batched_transpose(y_expanded)
-    println("size(x_expanded): ", size(x_expanded))
-    println("typeof(x_expanded): ", typeof(x_expanded))
-    println("size(y_T): ", size(y_T))
-    println("typeof(y_T): ", typeof(y_T))
-    println("")
-    return NNlib.batched_mul(x_expanded, y_T)
+    # println("size(x_expanded): ", size(x_expanded))
+    # println("typeof(x_expanded): ", typeof(x_expanded))
+    # println("size(y_T): ", size(y_T))
+    # println("typeof(y_T): ", typeof(y_T))
+    # println("")
+    return NNlib.batched_mul(x_expanded, y_T) # Fails in Julia nightly for some reason
+    # println(size(x_expanded .* y_T))
+    # return x_expanded .* y_T
 end
 
 
