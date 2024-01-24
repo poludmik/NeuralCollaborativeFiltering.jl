@@ -1,8 +1,5 @@
 # Model evaluation
 
-```@index
-```
-
 Metrics for model evaluation are defined in `src/evaluation/` folder. 
 
 ## Metrics
