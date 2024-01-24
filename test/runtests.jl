@@ -38,6 +38,7 @@ using JLD2
         @test extended_reciprocal_rank([1, 2, 4, 7], [7, 8, 1, 5]) ≈ 1/3
         @test extended_reciprocal_rank([1, 2, 4], [4, 2, 3]) ≈ 2/3
         @test extended_reciprocal_rank([10, 20, 4], [1, 2, 3]) == 0.0
+        @test extended_reciprocal_rank([5, 21, 4], [0, 11, -11]) == 0.0
         @test extended_reciprocal_rank([8, 0, -1, 5, 4, 6, 7], [0, -1, 3, 8, 4, 5, 7]) ≈ 0.6547619047619049
         @test_throws MethodError extended_reciprocal_rank([8, 0, -1, 5, 4.0, 6, 7], [0, -1, 3, 8, 4, 5, 7])
     end
@@ -48,7 +49,6 @@ using JLD2
 
         println("@__DIR__: ", @__DIR__)
 
-        @test isdir("resources")
         @test isdir(joinpath(@__DIR__, "resources"))
         @test isdir(joinpath(@__DIR__, "resources/weights"))
         @test isdir(joinpath(@__DIR__, "resources/weights/dot_product_ncf"))
